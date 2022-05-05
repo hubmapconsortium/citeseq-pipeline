@@ -15,6 +15,9 @@ inputs:
   fastq_dir_hto:
     label: "Directory containing HTO FASTQ files"
     type: Directory
+  adt_hto_metadata:
+    label: "File containing ADT and HTO sequences"
+    type: File
   assay:
     label: "scRNA-seq assay"
     type: string
@@ -32,10 +35,8 @@ outputs:
 steps:
   prep_adt_hto_sequences:
     in:
-      fastq_dir_adt:
-        source: fastq_dir_adt
-      fastq_dir_hto:
-        source: fastq_dir_hto
+      adt_hto_metadata:
+        source: adt_hto_metadata
     out: [adt_tsv, hto_tsv]
     run: steps/prep_adt_hto_sequences.cwl
   adt_index:
