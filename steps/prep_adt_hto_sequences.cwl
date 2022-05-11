@@ -4,7 +4,6 @@ label: Extract ADT and HTO sequences for indexing
 requirements:
   DockerRequirement:
       dockerPull: hubmap/citeseq_analysis:latest
-  DockerGpuRequirement: {}
 baseCommand: "/opt/prep_adt_hto_sequences.py"
 
 inputs:
