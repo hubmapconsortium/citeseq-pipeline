@@ -1,6 +1,6 @@
 #!/usr/bin/env cwl-runner
 class: Workflow
-cwlVersion: v1.0
+cwlVersion: v1.1
 label: CITE-seq pipeline using Salmon and Alevin (HuBMAP scRNA-seq pipeline)
 requirements:
   SubworkflowFeatureRequirement: {}
