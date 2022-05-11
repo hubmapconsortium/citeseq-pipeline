@@ -59,6 +59,8 @@ steps:
     in:
       adt_index:
         source: adt_index/adt_index
+      fastq_dir_adt:
+        source: fastq_dir_adt
       threads:
         source: threads
     out: [adt_salmon_dir]
@@ -67,6 +69,8 @@ steps:
     in:
       hto_index:
         source: hto_index/hto_index
+      fastq_dir_hto:
+        source: fastq_dir_hto
       threads:
         source: threads
     out: [hto_salmon_dir]
