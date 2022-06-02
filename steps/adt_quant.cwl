@@ -22,11 +22,16 @@ inputs:
     inputBinding:
       position: 2
       prefix: "--index_dir"
-  out_dir:
-    type: Directory
+  adt_name:
+    type: string
     inputBinding:
       position: 3
-      prefix: "--out_dir"
+      prefix: "--name"
+  # out_dir:
+  #   type: Directory
+  #   inputBinding:
+  #     position: 3
+  #     prefix: "--out_dir"
 outputs:
   adt_out_dir:
     type: Directory
