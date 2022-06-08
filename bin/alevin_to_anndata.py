@@ -50,8 +50,11 @@ def convert(input_dir: Path) -> AnnData:
 if __name__ == "__main__":
     p = ArgumentParser()
     p.add_argument("--alevin_out_dir", type=Path)
-    
+    p.add_argument("--name", type=str)
+
     args = p.parse_args()
     raw = convert(args.alevin_out_dir)
-    raw.write_h5ad("raw_expr.h5ad")
+    
+    filename = "raw_expr_" + str(args.name) + ".h5ad"
+    raw.write_h5ad(filename)
     
