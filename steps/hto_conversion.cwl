@@ -12,13 +12,13 @@ inputs:
     inputBinding:
       position: 0
       prefix: --alevin_out_dir
-  # adt_name:
-  #   type: string
-  #   inputBinding:
-  #     position: 1
-  #     prefix: --name
+  hto_name:
+    type: string
+    inputBinding:
+      position: 1
+      prefix: --name
 outputs:
   raw_expr_h5ad:
     type: File
     outputBinding:
-      glob: raw_expr.h5ad
+      glob: raw_expr_hto.h5ad
