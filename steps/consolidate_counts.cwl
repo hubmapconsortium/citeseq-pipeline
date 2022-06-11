@@ -4,21 +4,21 @@ label: Consolidate RNA, ADT and HTO counts
 requirements:
   DockerRequirement:
       dockerPull: hubmap/citeseq_analysis:latest
-baseCommand: /opt/salmon_wrapper.py
+baseCommand: /opt/consolidate_counts.py
 
 inputs:
   rawexpr_dir:
     type: Directory
     inputBinding:
       position: 0
-	  prefix: "--out_dir"
+      prefix: "--out_dir"
   transformation_dir:
     type: Directory
     inputBinding:
       position: 1
-	  prefix: "--trans_dir"
+      prefix: "--trans_dir"
 outputs:
-  combined_out_dir:
-    type: Directory
+  muon_out_dir:
+    type: File
     outputBinding:
-      glob: combined_counts
+      glob: mudata.h5mu
