@@ -31,7 +31,6 @@ SALMON_COMMAND = [
 ]
 
 def main(
-    # orig_fastq_dirs: Sequence[Path],
     fastq_dir: Path,
     threads: Optional[int],
     index_dir: Path,
@@ -66,9 +65,6 @@ def main(
     if not fastq_pairs:
         raise ValueError("No FASTQ files found")
 
-    # if assay.keep_all_barcodes:
-    #     command.extend(["--keepCBFraction", "1"])
-
     for r1_fastq_file, r2_fastq_file in fastq_pairs:
         fastq_extension = [
             "-1",
@@ -89,8 +85,6 @@ def main(
 
 if __name__ == "__main__":
     p = ArgumentParser()
-    # p.add_argument("trimmed_fastq_dir", type=Path)
-    # p.add_argument("orig_fastq_dir", type=Path, nargs="+")
     p.add_argument("--fastq_dir", type=Path)
     p.add_argument("-p", "--threads", type=int)
     p.add_argument("--index_dir", type=Path)
@@ -98,8 +92,6 @@ if __name__ == "__main__":
     args = p.parse_args()
 
     main(
-        # args.orig_fastq_dir,
-        # args.trimmed_fastq_dir,
         args.fastq_dir,
         args.threads,
 		args.index_dir,

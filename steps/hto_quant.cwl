@@ -4,7 +4,7 @@ label: HTO quantification
 requirements:
   DockerRequirement:
       dockerPull: hubmap/citeseq_analysis:latest
-baseCommand: /opt/salmon_wrapper.py
+baseCommand: /opt/adt_hto_salmon_wrapper.py
 
 inputs:
   fastq_dir:

@@ -12,16 +12,11 @@ inputs:
     inputBinding:
       position: 0
 	  prefix: "--out_dir"
-#   adt_out_dir:
-#     type: Directory
-#     inputBinding:
-#       position: 1
-# 	  prefix: "--adt_out_dir"
-#   hto_out_dir:
-#     type: Directory
-#     inputBinding:
-#       position: 2
-# 	  prefix: "--hto_out_dir"
+  transformation_dir:
+    type: Directory
+    inputBinding:
+      position: 1
+	  prefix: "--trans_dir"
 outputs:
   combined_out_dir:
     type: Directory
