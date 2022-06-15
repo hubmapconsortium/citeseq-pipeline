@@ -14,8 +14,7 @@ def generate_barcode_dict(directory: Path):
 	print("Generated ", len(barcode_dict), " key-value pairs for RNA barcode transformation.")
 	return barcode_dict
 
-def transform_rna_barcode(barcode_dict: Path, rna_name: set):
-	rna_name = list(rna_name)
+def transform_rna_barcode(barcode_dict: Path, rna_name: list):
 	count = 0
 	for i in range(len(rna_name)):
 		barcode = rna_name[i]
@@ -24,7 +23,7 @@ def transform_rna_barcode(barcode_dict: Path, rna_name: set):
 			continue
 		else:
 			rna_name[i] = barcode_dict[barcode]
-	return set(rna_name), count
+	return rna_name, count
 
 def main(
     out_dir: Path,
@@ -38,9 +37,9 @@ def main(
     adt_expr = sc.read_h5ad(adt_path)
     hto_expr = sc.read_h5ad(hto_path)
 
-    rna_name = set(rna_expr.obs_names)
-    adt_name = set(adt_expr.obs_names)
-    hto_name = set(hto_expr.obs_names)
+    rna_name = list(rna_expr.obs_names)
+    adt_name = list(adt_expr.obs_names)
+    hto_name = list(hto_expr.obs_names)
 
 	# if the '3M-february-2018.txt' file exist, perform transformation step
     trans_file_path = str(trans_dir) + "/3M-february-2018.txt"
@@ -49,12 +48,13 @@ def main(
         print("Find 3M-february-2018.txt under given directory.")
         print("Performing transformation step of the cellular barcodes of RNA...")
         barcode_dict = generate_barcode_dict(trans_file_path)
-        rna_name, count = transform_rna_barcode(barcode_dict, rna_name)
+        rna_expr.obs.index, count = transform_rna_barcode(barcode_dict, rna_name)
+        rna_name = list(rna_expr.obs_names)
         print("A total of", count, "out of", len(rna_name), "RNA cell barcodes were not found in RNA barcode transformation dictionary." )
-
-    common_cells = list(adt_name & hto_name & rna_name)
+    common_cells = list(set(adt_name) & set(hto_name) & set(rna_name))
     print("There are", len(common_cells), "common cells in RNA, ADT and HTO experiments.")
     
+    # change the old name
     mdata = mu.MuData({'rna': rna_expr[common_cells, :], 'adt': adt_expr[common_cells, :], 'hto': hto_expr[common_cells, :]})
     print("Saving MuData filtered by", len(common_cells), "common cells in RNA, ADT and HTO experiments...")
     mdata.write("mudata.h5mu")
