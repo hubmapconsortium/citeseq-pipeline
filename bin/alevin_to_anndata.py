@@ -29,7 +29,7 @@ def build_anndata(X, rows: Sequence[str], cols: Sequence[str], **kwargs) -> AnnD
 
 def convert(input_dir: Path) -> AnnData:
 
-    alevin_dir = input_dir / "salmon_out" / "alevin"
+    alevin_dir = input_dir / "alevin"
 
     with open(alevin_dir / "quants_mat_rows.txt") as f:
         cb_names = [line.strip() for line in f]
