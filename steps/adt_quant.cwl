@@ -27,11 +27,6 @@ inputs:
     inputBinding:
       position: 3
       prefix: "--name"
-  # out_dir:
-  #   type: Directory
-  #   inputBinding:
-  #     position: 3
-  #     prefix: "--out_dir"
 outputs:
   adt_out_dir:
     type: Directory

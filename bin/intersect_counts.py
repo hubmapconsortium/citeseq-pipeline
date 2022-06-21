@@ -2,6 +2,7 @@
 from argparse import ArgumentParser
 from pathlib import Path
 import scanpy as sc
+import os
 from os.path import exists
 import pandas as pd
 import muon as mu
@@ -54,11 +55,15 @@ def main(
     common_cells = list(set(adt_name) & set(hto_name) & set(rna_name))
     print("There are", len(common_cells), "common cells in RNA, ADT and HTO experiments.")
     
-    # change the old name
-    mdata = mu.MuData({'rna': rna_expr[common_cells, :], 'adt': adt_expr[common_cells, :], 'hto': hto_expr[common_cells, :]})
-    print("Saving MuData filtered by", len(common_cells), "common cells in RNA, ADT and HTO experiments...")
-    mdata.write("mudata.h5mu")
-
+    # Write h5ad file for RNA, ADT and HTO separately
+    rna_expr = rna_expr[common_cells, :]
+    adt_expr = adt_expr[common_cells, :]
+    hto_expr = hto_expr[common_cells, :]
+    print("Saving h5ad files filtered by", len(common_cells), "common cells in RNA, ADT and HTO experiments...")
+    os.mkdir("anndata_out")
+    rna_expr.write_h5ad("anndata_out/rna_filtered.h5ad")
+    adt_expr.write_h5ad("anndata_out/adt_filtered.h5ad")
+    hto_expr.write_h5ad("anndata_out/hto_filtered.h5ad")
 
 if __name__ == "__main__":
     p = ArgumentParser()

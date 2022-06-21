@@ -1,10 +1,10 @@
 cwlVersion: v1.1
 class: CommandLineTool
-label: Consolidate RNA, ADT and HTO counts
+label: Intersect RNA, ADT and HTO counts
 requirements:
   DockerRequirement:
       dockerPull: hubmap/citeseq_analysis:latest
-baseCommand: /opt/consolidate_counts.py
+baseCommand: /opt/intersect_counts.py
 
 inputs:
   rawexpr_dir:
@@ -19,6 +19,6 @@ inputs:
       prefix: "--trans_dir"
 outputs:
   muon_out_dir:
-    type: File
+    type: Directory
     outputBinding:
-      glob: mudata.h5mu
+      glob: anndata_out
