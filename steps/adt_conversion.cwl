@@ -7,18 +7,13 @@ requirements:
 baseCommand: /opt/alevin_to_anndata.py
 
 inputs:
-  adt_out_dir:
+  adt_salmon_dir:
     type: Directory
     inputBinding:
       position: 0
       prefix: --alevin_out_dir
-  # adt_name:
-  #   type: string
-  #   inputBinding:
-  #     position: 1
-  #     prefix: --name
 outputs:
-  raw_expr_h5ad:
-    type: File
+  raw_expr_h5ad_dir:
+    type: Directory
     outputBinding:
-      glob: raw_expr.h5ad
+      glob: raw_expr_out

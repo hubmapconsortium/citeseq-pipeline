@@ -1,10 +1,10 @@
-cwlVersion: v1.1
+cwlVersion: v1.2
 class: CommandLineTool
 label: ADT indexing
 requirements:
   DockerRequirement:
       dockerPull: hubmap/citeseq_analysis:latest
-baseCommand: [salmon, index, --features, -k7]
+baseCommand: [salmon, index, --features, -k7, -i, adt_index]
 
 inputs:
   adt_tsv:
@@ -12,13 +12,8 @@ inputs:
     inputBinding:
       position: 0
       prefix: -t
-  out_dir:
-    type: string
-    inputBinding:
-      position: 1
-      prefix: -i
 outputs:
-  adt_index_dir:
+  adt_index:
     type: Directory
     outputBinding:
       glob: adt_index

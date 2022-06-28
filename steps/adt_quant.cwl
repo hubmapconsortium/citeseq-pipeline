@@ -7,7 +7,7 @@ requirements:
 baseCommand: /opt/adt_hto_salmon_wrapper.py
 
 inputs:
-  fastq_dir:
+  fastq_dir_adt:
     type: Directory
     inputBinding:
       position: 0
@@ -17,18 +17,13 @@ inputs:
     inputBinding:
       position: 1
       prefix: "--threads"
-  adt_index_dir:
+  adt_index:
     type: Directory
     inputBinding:
       position: 2
       prefix: "--index_dir"
-  adt_name:
-    type: string
-    inputBinding:
-      position: 3
-      prefix: "--name"
 outputs:
-  adt_out_dir:
+  adt_salmon_dir:
     type: Directory
     outputBinding:
       glob: alevin_adt

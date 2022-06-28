@@ -34,16 +34,18 @@ def main(
     fastq_dir: Path,
     threads: Optional[int],
     index_dir: Path,
-    name: str,
 ):
     threads = threads or 1
     path = None
-    if name == "ADT":
+    print("Target index directory is", str(index_dir))
+    if "adt_index" in str(index_dir):
         path = "alevin_adt"
-    elif name == "HTO":
+        print("Starting ADT quantification...")
+    elif "hto_index" in str(index_dir):
         path = "alevin_hto"
+        print("Starting HTO quantification...")
     else:
-        raise ValueError("Incorrect name! Should use ADT or HTO as input name.")
+        raise ValueError("Incorrect input index directory! Not for ADT/HTO experiments")
     
     command = [
         piece.format(
@@ -55,8 +57,9 @@ def main(
         for piece in SALMON_COMMAND
     ]
 
-    if name == "HTO":
+    if "hto_index" in str(index_dir):
         command.extend(["--naiveEqclass"])
+        print("Extended --naiveEqclass flag for HTO experiment.")
 
     fastq_pairs: Iterable[Sequence[Path]]
     
@@ -77,8 +80,6 @@ def main(
     print("Running:", " ".join(str(x) for x in command))
 
     env = environ.copy()
-    # Necessary for Singularity; this environment variable isn't
-    # set by that container runtime but is required to run Salmon
     env["LD_LIBRARY_PATH"] = "/usr/local/lib"
     check_call(command)
 
@@ -88,12 +89,10 @@ if __name__ == "__main__":
     p.add_argument("--fastq_dir", type=Path)
     p.add_argument("-p", "--threads", type=int)
     p.add_argument("--index_dir", type=Path)
-    p.add_argument("--name", type=str)
     args = p.parse_args()
 
     main(
         args.fastq_dir,
         args.threads,
 		args.index_dir,
-		args.name
     )
