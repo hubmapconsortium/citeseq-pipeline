@@ -29,10 +29,7 @@ def build_anndata(X, rows: Sequence[str], cols: Sequence[str], **kwargs) -> AnnD
 
 def convert(input_dir: Path) -> AnnData:
 
-    if "rna" in str(input_dir):
-        alevin_dir = input_dir / "salmon_out" / "alevin"
-    else:
-        alevin_dir = input_dir / "alevin"
+    alevin_dir = input_dir / "alevin"
 
     with open(alevin_dir / "quants_mat_rows.txt") as f:
         cb_names = [line.strip() for line in f]
@@ -56,16 +53,12 @@ if __name__ == "__main__":
 
     args = p.parse_args()
     raw = convert(args.alevin_out_dir)
-
-    if not os.path.exists("raw_expr_out"):
-        os.mkdir("raw_expr_out")
     
     if "adt" in str(args.alevin_out_dir):
         filename = "raw_expr_adt.h5ad"
     elif "hto" in str(args.alevin_out_dir):
         filename = "raw_expr_hto.h5ad"
-    elif "rna" in str(args.alevin_out_dir):
-        filename = "raw_expr_rna.h5ad"
-    raw.write_h5ad("raw_expr_out/" + filename)
+    
+    raw.write_h5ad(filename)
     print("h5ad file " + filename + " written.")
     

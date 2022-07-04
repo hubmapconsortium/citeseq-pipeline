@@ -13,7 +13,7 @@ inputs:
       position: 0
       prefix: --alevin_out_dir
 outputs:
-  raw_expr_h5ad_dir:
-    type: Directory
+  raw_expr_h5ad_hto:
+    type: File
     outputBinding:
-      glob: raw_expr_out
+      glob: raw_expr_hto.h5ad

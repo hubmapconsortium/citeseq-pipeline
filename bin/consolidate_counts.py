@@ -70,7 +70,9 @@ def main(
 
 if __name__ == "__main__":
     p = ArgumentParser()
-    p.add_argument("--out_dir", type=Path)
+    p.add_argument("--rna_file", type=Path)
+    p.add_argument("--adt_file", type=Path)
+    p.add_argument("--hto_file", type=Path)
     p.add_argument("--trans_dir", type=Path)
     p.add_argument("--trans_filename", type=str)
 

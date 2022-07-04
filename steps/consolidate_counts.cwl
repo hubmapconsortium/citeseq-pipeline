@@ -7,20 +7,30 @@ requirements:
 baseCommand: /opt/consolidate_counts.py
 
 inputs:
-  raw_expr_h5ad_dir:
-    type: Directory
+  count_matrix_h5ad_rna:
+    type: File
     inputBinding:
       position: 0
-      prefix: "--out_dir"
+      prefix: "--rna_file"
+  count_matrix_h5ad_adt:
+    type: File
+    inputBinding:
+      position: 1
+      prefix: "--adt_file"
+  count_matrix_h5ad_hto:
+    type: File
+    inputBinding:
+      position: 2
+      prefix: "--hto_file"
   transformation_dir:
     type: Directory?
     inputBinding:
-      position: 1
+      position: 3
       prefix: "--trans_dir"
   transformation_filename:
     type: string?
     inputBinding:
-      position: 2
+      position: 4
       prefix: "--trans_filename"
 outputs:
   muon_original:
