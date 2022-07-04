@@ -1,23 +1,28 @@
 #!/usr/bin/env cwl-runner
 class: Workflow
-cwlVersion: v1.1
+cwlVersion: v1.2
 label: CITE-seq pipeline using Salmon and Alevin (HuBMAP scRNA-seq pipeline)
 requirements:
   SubworkflowFeatureRequirement: {}
   ScatterFeatureRequirement: {}
+  InlineJavascriptRequirement: {}
+  MultipleInputFeatureRequirement: {}
 inputs:
   fastq_dir_rna:
     label: "Directory containing RNA-seq FASTQ files"
-    type: Directory
+    type: Directory[]
   fastq_dir_adt:
     label: "Directory containing ADT FASTQ files"
     type: Directory
   fastq_dir_hto:
     label: "Directory containing HTO FASTQ files"
-    type: Directory
-  adt_hto_metadata:
-    label: "File containing ADT and HTO sequences"
+    type: Directory?
+  adt_tsv:
+    label: "ADT feature barcode"
     type: File
+  hto_tsv:
+    label: "HTO feature barcode"
+    type: File?
   assay:
     label: "scRNA-seq assay"
     type: string
@@ -27,65 +32,84 @@ inputs:
     default: 1
   expected_cell_count:
     type: int?
+  keep_all_barcodes:
+    type: boolean?
+  trans_dir:
+    label: "Directory of barcode transformation mapping file for feature barcoding protocol use TotalSeq B or C"
+    type: Directory?
+  trans_filename:
+    label: "Filename of barcode transformation mapping file for feature barcoding protocol use TotalSeq B or C"
+    type: string?
 outputs:
   count_matrix_h5mu:
-    outputSource: consolidate_counts/expr_h5mu
+    outputSource: consolidate_counts/muon_original
     type: File
-    label: "Consolidated expression per cell: gene expression, ADT, HTO"
+    label: "Consolidated expression per cell: gene expression, ADT, HTO (optional)"
 steps:
-  prep_adt_hto_sequences:
+  rna_quantification:
     in:
-      adt_hto_metadata:
-        source: adt_hto_metadata
-    out: [adt_tsv, hto_tsv]
-    run: steps/prep_adt_hto_sequences.cwl
-  adt_index:
-    in:
-      adt_tsv:
-        source: prep_adt_hto_sequences/adt_tsv
+      fastq_dir:
+        source: fastq_dir_rna
+      assay:
+        source: assay
       threads:
         source: threads
-    out: [adt_index]
-    run: steps/adt_index.cwl
-  hto_index:
+      expected_cell_count:
+        source: expected_cell_count
+      keep_all_barcodes:
+        source: keep_all_barcodes
+    out:
+      - salmon_output
+      - count_matrix_h5ad
+      - raw_count_matrix
+      - genome_build_json
+    run: salmon-rnaseq/steps/salmon-quantification.cwl
+  adt_quantification:
     in:
-      hto_tsv:
-        source: prep_adt_hto_sequences/hto_tsv
-      threads:
-        source: threads
-    out: [hto_index]
-    run: steps/hto_index.cwl
-  adt_quant:
-    in:
-      adt_index:
-        source: adt_index/adt_index
       fastq_dir_adt:
         source: fastq_dir_adt
+      adt_tsv:
+        source: adt_tsv
       threads:
         source: threads
-    out: [adt_salmon_dir]
-    run: steps/adt_quant.cwl
-  hto_quant:
+    out: 
+      - count_matrix_h5ad_adt
+    run: steps/adt_quantification.cwl
+  hto_quantification:
     in:
-      hto_index:
-        source: hto_index/hto_index
       fastq_dir_hto:
         source: fastq_dir_hto
+      hto_tsv:
+        source: hto_tsv
       threads:
         source: threads
-    out: [hto_salmon_dir]
-    run: steps/hto_quant.cwl
+    out: 
+      - count_matrix_h5ad_hto
+    when: $(inputs.fastq_dir_hto != null)
+    run: steps/hto_quantification.cwl
   consolidate_counts:
     in:
-      adt_salmon_dir:
+      count_matrix_h5ad_rna:
         source:
-          adt_quant/adt_salmon_dir
-      hto_salmon_dir:
+          rna_quantification/count_matrix_h5ad
+      count_matrix_h5ad_adt:
         source:
-          hto_quant/hto_salmon_dir
+          adt_quantification/count_matrix_h5ad_adt
+      count_matrix_h5ad_hto:
+        source:
+          hto_quantification/count_matrix_h5ad_hto
+      trans_dir:
+        source:
+          trans_dir
       rna_salmon_dir:
         source:
-          rna_quant/rna_salmon_dir
-    out:
-      [expr_h5mu]
+          trans_filename
+    out: [muon_original]
     run: steps/consolidate_counts.cwl
+  # downstream_analysis:
+  #   in:
+  #     muon_original:
+  #       source:
+  #         consolidate_counts/muon_original
+  #   out: [muon_processed]
+  #   run: steps/downstream.cwl
