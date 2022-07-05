@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 from argparse import ArgumentParser
 from pathlib import Path
-from turtle import color
+#from turtle import color
 import scanpy as sc
 from os.path import exists
 import pandas as pd
@@ -12,16 +12,23 @@ from plot_utils import new_plot
 import numpy as np
 
 def main(
-	muon_ori: Path,
+	anndata_dir: Path
 ):
-
 	# Read the muon data here
-	rna = mu.read(str(muon_ori / "rna"))
-	adt = mu.read(str(muon_ori / "adt"))
-	mdata_raw = mu.MuData({'rna': rna, 'adt': adt})
-	print("Construct muon object only with RNA and ADT data.")
-	print(mdata_raw)
+	rna_path = str(anndata_dir) + "/rna_filtered.h5ad"
+	adt_path = str(anndata_dir) + "/adt_filtered.h5ad"
+	hto_path = str(anndata_dir) + "/hto_filtered.h5ad"
     
+	rna_expr = sc.read_h5ad(rna_path)
+	# rna_expr.obs["log10umi"] = np.array(np.log10(rna_expr.X.sum(axis=1) + 1)).reshape(-1)
+	adt_expr = sc.read_h5ad(adt_path)
+	if exists(hto_path):
+		hto_expr = sc.read_h5ad(hto_path)
+		print("Find HTO data.")
+	print("Construct muon object with RNA and ADT expression data.")
+	mdata_raw = mu.MuData({'rna': rna_expr, 'adt':adt_expr})
+	print(mdata_raw)
+	
 	mdata_rna = mdata_raw.mod['rna']
 	mdata_adt = mdata_raw.mod['adt']
 	
@@ -80,32 +87,42 @@ def main(
     # mu.pp.intersect_obs(mdata_raw)
 
 	# multiplex clustering
+	#mu.pp.neighbors(mdata_raw)
+	#mu.tl.umap(mdata_raw)
 	mu.tl.louvain(mdata_raw, resolution=[2, .1], random_state=1)
 	mu.tl.leiden(mdata_raw, resolution=[2, .1], random_state=1)
-	
-	with new_plot():
-		mu.pl.embedding(mdata_raw, basis="rna:X_umap", color="louvain")
-		plt.savefig("louvain_cluster_combined.pdf")
-	with new_plot():
-		mu.pl.embedding(mdata_raw, basis="rna:X_umap", color="leiden")
-		plt.savefig("leiden_cluster_combined.pdf")
+	print(mdata_raw)
+	#with new_plot():
+		#mu.pl.embedding(mdata_raw, basis="X_umap", color="louvain")
+		#plt.savefig("louvain_cluster_combined.pdf")
+	#with new_plot():
+		#mu.pl.embedding(mdata_raw, basis="X_umap", color="leiden")
+		#plt.savefig("leiden_cluster_combined.pdf")
+
 	
 	# multi-omics factor analysis
 	# generate an interpretable latent space for both RNA and ADT modalities
 	mdata_adt.var["highly_variable"] = True
 	mdata_raw.update()
 	mu.tl.mofa(mdata_raw, outfile="mofa.hdf5", n_factors=30)
-	# sc.pp.neighbors(mdata_raw, use_rep="X_mofa")
-	# sc.tl.umap(mdata_raw, random_state=1)
+	print(mdata_raw.obsm["X_mofa"].shape)
+	sc.pp.neighbors(mdata_raw, use_rep="X_mofa")
+	sc.tl.umap(mdata_raw, random_state=1)
+	with new_plot():
+        	mu.pl.embedding(mdata_raw, basis="X_umap", color="louvain")
+        	plt.savefig("louvain_cluster_combined.pdf")
+	#with new_plot():
+        	#mu.pl.embedding(mdata_raw, basis="X_umap", color="leiden")
+	        #plt.savefig("leiden_cluster_combined.pdf")
 
 	mdata_raw.write("citeseq_downstream.h5mu")
 	
 if __name__ == "__main__":
 	p = ArgumentParser()
-	p.add_argument("--muon_ori", type=Path)
+	p.add_argument("--anndata_dir", type=Path)
 
 	args = p.parse_args()
 
 	main(
-		args.muon_ori,
+		args.anndata_dir,
 	)
