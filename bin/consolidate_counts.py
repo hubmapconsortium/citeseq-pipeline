@@ -27,35 +27,36 @@ def transform_rna_barcode(barcode_dict: Path, rna_name: list):
 	return rna_name, count
 
 def main(
-    out_dir: Path,
+    rna_file: Path,
+    adt_file: Path,
+    hto_file: Path,
 	trans_dir: Path,
     trans_filename: str,
 ):
-    rna_path = out_dir / "raw_expr_rna.h5ad"
-    adt_path = out_dir / "raw_expr_adt.h5ad"
-    hto_path = out_dir / "raw_expr_hto.h5ad"
-    
-    rna_expr = sc.read_h5ad(rna_path)
+   
+    rna_expr = sc.read_h5ad(rna_file)
     rna_name = list(rna_expr.obs_names)
-    adt_expr = sc.read_h5ad(adt_path)
+    adt_expr = sc.read_h5ad(adt_file)
     adt_name = list(adt_expr.obs_names)
-    if exists(hto_path):
-        hto_expr = sc.read_h5ad(hto_path)
+    if exists(hto_file):
+        hto_expr = sc.read_h5ad(hto_file)
         hto_name = list(hto_expr.obs_names)
     else:
         print("HTO expression matrix is not found. Will not combine HTO experiment.")
     
 	# if the transformation file of given name exist, perform transformation step
-    trans_file_path = trans_dir / trans_filename
-    if exists(trans_file_path):
-        print("Find ", trans_filename, " under given directory.")
-        print("Performing transformation step of the cellular barcodes of RNA...")
-        barcode_dict = generate_barcode_dict(trans_file_path)
-        rna_expr.obs.index, count = transform_rna_barcode(barcode_dict, rna_name)
-        rna_name = list(rna_expr.obs_names)
-        print("A total of", count, "out of", len(rna_name), "RNA cell barcodes were not found in RNA barcode transformation dictionary." )
+    if trans_dir != None:
+        trans_file_path = trans_dir / trans_filename
+        if exists(trans_file_path):
+            print("Performing transformation step of the cellular barcodes of RNA...")
+            barcode_dict = generate_barcode_dict(trans_file_path)
+            rna_expr.obs.index, count = transform_rna_barcode(barcode_dict, rna_name)
+            rna_name = list(rna_expr.obs_names)
+            print("A total of", count, "out of", len(rna_name), "RNA cell barcodes were not found in RNA barcode transformation dictionary." )
+        else:
+            raise ValueError(trans_filename, " is not found under given directory.")
     
-    if exists(hto_path):
+    if exists(hto_file):
         common_cells = list(set(adt_name) & set(hto_name) & set(rna_name))
         print("There are", len(common_cells), "common cells in RNA, ADT and HTO experiments.")
         mdata = mu.MuData({'rna': rna_expr[common_cells, :], 'adt': adt_expr[common_cells, :], 'hto': hto_expr[common_cells, :]})
@@ -79,7 +80,9 @@ if __name__ == "__main__":
     args = p.parse_args()
 
     main(
-        args.out_dir,
+        args.rna_file,
+        args.adt_file,
+        args.hto_file,
 		args.trans_dir,
         args.trans_filename
 	)
