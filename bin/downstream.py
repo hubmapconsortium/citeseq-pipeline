@@ -93,6 +93,7 @@ def main(
     # # if we filter the cells at the RNA QC step, subset them in the protein modality
 	# mu.pp.intersect_obs(mdata_raw)
 	print(mdata_raw)
+	mdata_raw.write("citeseq_normalized.h5mu")
 	## Multi-omics factor analysis
 	mdata_adt.var["highly_variable"] = True
 	mdata_raw.update()

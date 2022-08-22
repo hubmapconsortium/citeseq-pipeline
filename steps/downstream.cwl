@@ -16,5 +16,24 @@ outputs:
   muon_processed:
     type: File
     outputBinding:
-      glob: "citeseq_downstream.h5mu"
+      glob: "citeseq_normalized.h5mu"
+  mofa_out:
+    type: File
+    outputBinding:
+      glob: "citeseq_mofa.hdf5"
+  rna_embedding:
+    type: File
+    outputBinding:
+      glob: "leiden_cluster_rna.pdf"
+  adt_embedding:
+    type: File
+    outputBinding:
+      glob: "leiden_cluster_adt.pdf"
+  joint_embedding:
+    type: File
+    outputBinding:
+      glob: "leiden_cluster_combined.pdf"
+  
+
+  
   

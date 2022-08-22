@@ -41,10 +41,30 @@ inputs:
     label: "Filename of barcode transformation mapping file for feature barcoding protocol use TotalSeq B or C"
     type: string?
 outputs:
-  count_matrix_h5mu:
+  muon_original_h5mu:
     outputSource: consolidate_counts/muon_original
     type: File
     label: "Consolidated expression per cell: gene expression, ADT, HTO (optional)"
+  muon_processed_h5mu:
+    outputSource: downstream_analysis/muon_processed
+    type: File
+    label: "Processed version of raw expression for each modality"
+  mofa_model:
+    outputSource: downstream_analysis/mofa_out
+    type: File
+    label: "Multi-omics factor analysis model"
+  rna_embedding_result:
+    outputSource: downstream_analysis/rna_embedding
+    type: File
+    label: "Leiden clustering result on rna modality"
+  adt_embedding_result:
+    outputSource: downstream_analysis/adt_embedding
+    type: File
+    label: "Leiden clustering result on adt modality"
+  joint_embedding_result:
+    outputSource: downstream_analysis/joint_embedding
+    type: File
+    label: "Leiden clustering result on joint modality"
 steps:
   rna_quantification:
     in:
@@ -106,10 +126,15 @@ steps:
           trans_filename
     out: [muon_original]
     run: steps/consolidate_counts.cwl
-  # downstream_analysis:
-  #   in:
-  #     muon_original:
-  #       source:
-  #         consolidate_counts/muon_original
-  #   out: [muon_processed]
-  #   run: steps/downstream.cwl
+  downstream_analysis:
+    in:
+      muon_original:
+        source:
+          consolidate_counts/muon_original
+    out: 
+      - muon_processed
+      - mofa_out
+      - rna_embedding
+      - adt_embedding
+      - joint_embedding
+    run: steps/downstream.cwl
