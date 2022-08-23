@@ -14,9 +14,11 @@ import numpy as np
 def main(
 	muon_dir: Path
 ):
-	rna_expr = mu.read("mudata_raw.h5mu/rna")
+	rna_expr = mu.read(str(muon_dir) + "/rna")
+	print(rna_expr)
 	rna_expr.X = rna_expr.layers['spliced']
-	adt_expr = mu.read("mudata_raw.h5mu/adt")
+	print(rna_expr)
+	adt_expr = mu.read(str(muon_dir) + "/adt")
 	print("Construct muon object with RNA and ADT expression data.")
 	mdata_raw = mu.MuData({'rna': rna_expr, 'adt':adt_expr})
 	print(mdata_raw)
@@ -111,7 +113,7 @@ def main(
 		sc.pl.umap(mdata_raw, color='leiden_wnn', legend_loc='on data')
 		plt.savefig("leiden_cluster_combined.pdf")
 
-	# mdata_raw.write("citeseq_downstream.h5mu")
+	mdata_raw.write("citeseq_downstream.h5mu")
 	
 if __name__ == "__main__":
 	p = ArgumentParser()

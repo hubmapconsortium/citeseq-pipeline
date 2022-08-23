@@ -33,7 +33,7 @@ inputs:
       position: 4
       prefix: "--trans_filename"
 outputs:
-  muon_original:
+  muon_dir:
     type: File
     outputBinding:
       glob: "mudata_raw.h5mu"

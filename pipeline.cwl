@@ -42,7 +42,7 @@ inputs:
     type: string?
 outputs:
   muon_original_h5mu:
-    outputSource: consolidate_counts/muon_original
+    outputSource: consolidate_counts/muon_dir
     type: File
     label: "Consolidated expression per cell: gene expression, ADT, HTO (optional)"
   muon_processed_h5mu:
@@ -124,13 +124,13 @@ steps:
       rna_salmon_dir:
         source:
           trans_filename
-    out: [muon_original]
+    out: [muon_dir]
     run: steps/consolidate_counts.cwl
   downstream_analysis:
     in:
-      muon_original:
+      muon_dir:
         source:
-          consolidate_counts/muon_original
+          consolidate_counts/muon_dir
     out: 
       - muon_processed
       - mofa_out

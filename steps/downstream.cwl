@@ -7,11 +7,11 @@ requirements:
 baseCommand: /opt/downstream.py
 
 inputs:
-  muon_original:
+  muon_dir:
     type: File
     inputBinding:
       position: 0
-      prefix: "--muon_ori"
+      prefix: "--muon_dir"
 outputs:
   muon_processed:
     type: File
