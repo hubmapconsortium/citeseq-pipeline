@@ -14,11 +14,11 @@ import numpy as np
 def main(
 	muon_dir: Path
 ):
-	rna_expr = mu.read(str(muon_dir) + "/rna")
-	print(rna_expr)
+	expr = mu.read(str(muon_dir))
+	rna_expr = expr['rna']
 	rna_expr.X = rna_expr.layers['spliced']
 	print(rna_expr)
-	adt_expr = mu.read(str(muon_dir) + "/adt")
+	adt_expr = expr['adt']
 	print("Construct muon object with RNA and ADT expression data.")
 	mdata_raw = mu.MuData({'rna': rna_expr, 'adt':adt_expr})
 	print(mdata_raw)

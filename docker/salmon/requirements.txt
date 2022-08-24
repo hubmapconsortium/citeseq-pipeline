@@ -11,3 +11,5 @@ anndata
 muon
 
 leidenalg
+
+mofapy2
