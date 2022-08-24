@@ -1,5 +1,4 @@
 #!/usr/bin/env python3
-import os
 from argparse import ArgumentParser
 from os.path import exists
 from pathlib import Path

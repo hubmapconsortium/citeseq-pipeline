@@ -1,14 +1,10 @@
 #!/usr/bin/env python3
 from argparse import ArgumentParser
-from os.path import exists
 from pathlib import Path
 
 import matplotlib.pyplot as plt
 import muon as mu
 import numpy as np
-import pandas as pd
-
-# from turtle import color
 import scanpy as sc
 from muon import prot as pt
 

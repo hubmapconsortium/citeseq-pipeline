@@ -1,12 +1,9 @@
 #!/usr/bin/env python3
-import csv
-import re
 from argparse import ArgumentParser
-from operator import index
-from os import environ, fspath
+from os import environ
 from pathlib import Path
 from subprocess import check_call
-from typing import Iterable, Optional, Sequence, Tuple
+from typing import Iterable, Optional, Sequence
 
 from fastq_utils import find_grouped_fastq_files
 

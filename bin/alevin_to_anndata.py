@@ -1,21 +1,11 @@
 #!/usr/bin/env python3
-# import json
-import os
 from argparse import ArgumentParser
 from pathlib import Path
-
-# from shutil import copy
-# from typing import Dict, List, Optional, Sequence, Tuple, Union
 from typing import Sequence
 
-# import numpy as np
 import pandas as pd
 import scipy.io
-
-# import scipy.sparse
 from anndata import AnnData
-
-# from fastq_utils import smart_open
 
 
 def build_anndata(X, rows: Sequence[str], cols: Sequence[str], **kwargs) -> AnnData:
@@ -33,7 +23,6 @@ def build_anndata(X, rows: Sequence[str], cols: Sequence[str], **kwargs) -> AnnD
 
 
 def convert(input_dir: Path) -> AnnData:
-
     alevin_dir = input_dir / "alevin"
 
     with open(alevin_dir / "quants_mat_rows.txt") as f:
