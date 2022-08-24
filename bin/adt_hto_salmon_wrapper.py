@@ -1,8 +1,8 @@
 #!/usr/bin/env python3
 import csv
-from operator import index
 import re
 from argparse import ArgumentParser
+from operator import index
 from os import environ, fspath
 from pathlib import Path
 from subprocess import check_call
@@ -10,25 +10,25 @@ from typing import Iterable, Optional, Sequence, Tuple
 
 from fastq_utils import find_grouped_fastq_files
 
-
 SALMON_COMMAND = [
     "salmon",
     "alevin",
-	"-l",
-	"ISR",
+    "-l",
+    "ISR",
     "--index",
     "{index_dir}",
     "-o",
     "{out_dir}",
-	"--citeseq",
-	"--featureStart",
-	"0",
-	"--featureLength",
-	"15",
+    "--citeseq",
+    "--featureStart",
+    "0",
+    "--featureLength",
+    "15",
     "-p",
     "{threads}",
     "--dumpMtx",
 ]
+
 
 def main(
     fastq_dir: Path,
@@ -46,13 +46,13 @@ def main(
         print("Starting HTO quantification...")
     else:
         raise ValueError("Incorrect input index directory! Not for ADT/HTO experiments")
-    
+
     command = [
         piece.format(
             salmon_option="citeseq",
             threads=threads,
-            index_dir = index_dir,
-            out_dir = path,
+            index_dir=index_dir,
+            out_dir=path,
         )
         for piece in SALMON_COMMAND
     ]
@@ -62,7 +62,7 @@ def main(
         print("Extended --naiveEqclass flag for HTO experiment.")
 
     fastq_pairs: Iterable[Sequence[Path]]
-    
+
     fastq_pairs = list(find_grouped_fastq_files(fastq_dir, 2))
 
     if not fastq_pairs:
@@ -94,5 +94,5 @@ if __name__ == "__main__":
     main(
         args.fastq_dir,
         args.threads,
-		args.index_dir,
+        args.index_dir,
     )

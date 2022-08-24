@@ -1,16 +1,20 @@
 #!/usr/bin/env python3
 # import json
+import os
 from argparse import ArgumentParser
 from pathlib import Path
+
 # from shutil import copy
 # from typing import Dict, List, Optional, Sequence, Tuple, Union
 from typing import Sequence
-import os
+
 # import numpy as np
 import pandas as pd
 import scipy.io
+
 # import scipy.sparse
 from anndata import AnnData
+
 # from fastq_utils import smart_open
 
 
@@ -26,6 +30,7 @@ def build_anndata(X, rows: Sequence[str], cols: Sequence[str], **kwargs) -> AnnD
         var=pd.DataFrame(index=cols),
         **kwargs,
     )
+
 
 def convert(input_dir: Path) -> AnnData:
 
@@ -47,18 +52,18 @@ def convert(input_dir: Path) -> AnnData:
 
     return raw_labeled
 
+
 if __name__ == "__main__":
     p = ArgumentParser()
     p.add_argument("--alevin_out_dir", type=Path)
 
     args = p.parse_args()
     raw = convert(args.alevin_out_dir)
-    
+
     if "adt" in str(args.alevin_out_dir):
         filename = "raw_expr_adt.h5ad"
     elif "hto" in str(args.alevin_out_dir):
         filename = "raw_expr_hto.h5ad"
-    
+
     raw.write_h5ad(filename)
     print("h5ad file " + filename + " written.")
-    
