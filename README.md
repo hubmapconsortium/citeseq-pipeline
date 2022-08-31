@@ -29,5 +29,17 @@ To perform the mapping, extend the original command by:
 For the HTO quantification, all entries in the output HTO expression matrix might be zero. This is due to the malformed MTX file in HTO quantification output of Salmon. We've reported the issue here: https://github.com/COMBINE-lab/salmon/issues/791
 
 ## Environments
+To avoid possible reading errors, HBM-CITEseq requires `anndata >= 0.8.0` and `mudata >= 0.2.0`.  
+More information from Github: https://github.com/scverse/scanpy/issues/1351
 
+## Outputs
++ Multimodal data (stored using muon package in .h5mu format)
+1. Consolidated expression per cell for RNA, ADT and HTO(optional): `mudata.h5mu`
+2. Processed version of `mudata.h5mu` (including all downstream analysis information): `citeseq_downstream.h5mu`
++ Multi-omics integration result  
+1. MOFA model: `citeseq_mofa.hdf5`
++ Embedding results
+1. Leiden clustering result on rna modality: `leiden_cluster_rna.pdf`
+2. Leiden clustering result on adt modality: `leiden_cluster_adt.pdf`
+3. Leiden clustering result on joint modality: `leiden_cluster_combined.pdf`
 
