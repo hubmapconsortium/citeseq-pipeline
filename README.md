@@ -15,7 +15,8 @@ Supplementary info for input:
 ```
 --fastq_dir_hto HTO_FASTQ_DIR --hto_tsv HTO_BARCODE
 ```
-+ In order to quantify ADT and HTO data, we need to index the feature barcodes. The indexing provided by salmon should base on a tab separated file (tsv format), where each line represents one reference, id and the reference sequence are separated by the tab. Example `adt.tsv` and `hto.tsv` files can be found under `example_data` folder.
++ In order to quantify ADT and HTO data, we need to index the feature barcodes. The indexing provided by salmon should base on a tab separated file (tsv format), where each line represents one reference, id and the reference sequence are separated by the tab. We provided the `ADT_BARCODE` file for TotalSeq-A/B/C under `/adt_barcode` and the `HTO_BARCODE` file for TotalSeq-A/B/C under `/hto_barcode`. The first column is in the format of 'Description_Clone'. (https://www.biolegend.com/en-us/totalseq/barcode-lookup serves as a reference.)  
+If you want to specify your own barcode information, example `ADT_BARCODE` and `HTO_BARCODE` files can be found under `example_data`.
 
 + If the feature barcoding protocol use TotalSeq B or C, the cellular barcodes of RNA and the feature barcodes of ADT/HTO might not exactly be the same. Transformation needs to be performed based on a mapping file.  
 To download the mapping file: https://github.com/10XGenomics/cellranger/raw/master/lib/python/cellranger/barcodes/translation/3M-february-2018.txt.gz  
